@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class DynamicLabelsBugApplication {
+public class FruitApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(DynamicLabelsBugApplication.class, args);
-    }
+  public static void main(String[] args) {
+    SpringApplication.run(FruitApplication.class, args);
+  }
 
 }

@@ -7,39 +7,40 @@ For example, say you have a super class
 
     @Getter
     @Node
-    public abstract class Animal {
+    public abstract class Fruit {
       @DynamicLabels
-      private Set<String> labels = new TreeSet<>();
+      private Set<String> labels = Set.of();
     }
 
 A sub class
 
     @Node
-    public abstract class Feline extends Animal {
+    public class MagicalFruit extends Fruit {
     }
 
 And a sub class of the sub class
 
     @Node
-    public class Cat extends Feline {
+    public class Apple extends MagicalFruit {
     }
 
-You can query for instances of the `Cat` sub class only if they do not have a dynamic label
+You can query for instances of the `Apple` sub class only if they do not have a dynamic label
 
 
-    Cat cat1 = new Cat();
-    animalRepository.save(cat1);
+    Apple apple1 = new Apple();
+    fruitRepository.save(apple1);
 
-    Cat cat2 = new Cat();
-    cat2.getLabels().add("Orange");
-    animalRepository.save(cat2);
+    Apple apple2 = new Apple();
+    fruitRepository.save(apple2);
+    apple2.setLabels(Set.of("Delicious_1));
+    fruitRepository.save(apple2);
 
-    Cat found1 = (Cat) animalRepository.findById(cat1.getId()).get(); // this is fine
-    Cat found2 = (Cat) animalRepository.findById(cat2.getId()).get(); // BeanInstantiationException
+    var fruits = fruitRepository.findAll();
+    
+    // This assertion fails because apple2 becomes a MagicalFruit instance.
+    assertThat(fruits.stream().filter(Apple.class::isInstance)).hasSize(2);
 
-The second query fails if the `Feline` sub class is abstract or concrete, though the exception is different.
-
-This example worked correctly in SDN 6.2.1 but it fails with SDN 6.2.4.
+The same test pass if the `MagicalFruit` sub class is an abstract class.
 
 
 ## Requirements
@@ -48,5 +49,5 @@ Don't forget to set database credentials in [application.properties](src/main/re
 
 ## Tests
 
-Run [tests](src/test/java/com/example/relationshipbug/DynamicLabelsTest.java) via `mvn clean install` or via an IDE.
+Run [tests](src/test/java/com/example/relationshipbug/FruitRepositoryTest.java) via `mvn clean install` or via an IDE.
 
